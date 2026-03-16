@@ -18,7 +18,10 @@ public class ReservationService {
 
     public final Map<Long, Reservation> reservationMap;
 
-    public ReservationService() {
+    public final ReservationRepository repository;
+
+    public ReservationService(ReservationRepository repository) {
+        this.repository = repository;
         reservationMap = new HashMap<>();
         counter = new AtomicLong();
     }
