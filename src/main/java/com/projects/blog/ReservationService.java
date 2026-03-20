@@ -60,11 +60,11 @@ public class ReservationService {
     public Reservation createReservation(
             Reservation reservationToCreate
     ) {
-        if (reservationToCreate.id() != null) {
-            throw new IllegalArgumentException("ID should be empty!");
-        }
         if (reservationToCreate.status() != null) {
             throw new IllegalArgumentException("Status should be empty!");
+        }
+        if (reservationToCreate.endDate().isBefore(reservationToCreate.startDate())) {
+            throw new IllegalArgumentException("StartDate must be earlier than EndDate!");
         }
 
         var createdReservation = new ReservationEntity(
@@ -85,9 +85,22 @@ public class ReservationService {
     public void cancelReservation(
             Long id
     ) {
-        if (!repository.existsById(id)) {
-            throw new EntityNotFoundException("Not found reservation with id =" + id);
+        var reservationEntity = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Not found reservation with id = " + id
+                ));
+
+        if (reservationEntity.getStatus().equals(ReservationStatus.APPROVED)) {
+            throw new IllegalStateException(
+                    "Cannot cancel approved reservation with id = " + id
+            );
         }
+        if (reservationEntity.getStatus().equals(ReservationStatus.CANCELLED)) {
+            throw new IllegalStateException(
+                    "Reservation with id = " + id + " is already cancelled"
+            );
+        }
+
         repository.setStatus(id, ReservationStatus.CANCELLED);
         log.info("Called cancelReservation by id = " + id);
     }
@@ -103,6 +116,10 @@ public class ReservationService {
 
         if (reservationEntity.getStatus() != ReservationStatus.PENDING) {
             throw new IllegalStateException("Status should be PENDING for update!");
+        }
+
+        if (reservationToUpdate.endDate().isBefore(reservationToUpdate.startDate())) {
+            throw new IllegalArgumentException("StartDate must be earlier than EndDate!");
         }
 
         var updatedReservation = new ReservationEntity(
