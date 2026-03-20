@@ -1,9 +1,9 @@
 package com.projects.blog;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
 
 import org.slf4j.Logger;
@@ -81,13 +81,15 @@ public class ReservationService {
         return toReservation(savedReservation);
     }
 
-    public void deleteReservation(
+    @Transactional
+    public void cancelReservation(
             Long id
     ) {
         if (!repository.existsById(id)) {
             throw new EntityNotFoundException("Not found reservation with id =" + id);
         }
-        repository.deleteById(id);
+        repository.setStatus(id, ReservationStatus.CANCELLED);
+        log.info("Called cancelReservation by id = " + id);
     }
 
     public Reservation updateReservation(

@@ -58,12 +58,12 @@ public class ReservationController {
                 ));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/cancel")
     public ResponseEntity<Void> deleteReservation(
             @PathVariable("id") Long id
     ) {
         log.info("Called deleteReservation by id" + id);
-        reservationService.deleteReservation(id);
+        reservationService.cancelReservation(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
