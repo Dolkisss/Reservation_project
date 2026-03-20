@@ -38,14 +38,14 @@ public class ReservationController {
                 .body(reservationService.getReservationById(id));
     }
 
-    @GetMapping("/push/{id}")
-    public ResponseEntity<Reservation> pushReservationById(
-            @PathVariable("id") Long id
-    ) {
-        log.info("Called getReservationById by id = " + id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(reservationService.pushReservationById(id));
-    }
+//    @GetMapping("/push/{id}")
+//    public ResponseEntity<Reservation> pushReservationById(
+//            @PathVariable("id") Long id
+//    ) {
+//        log.info("Called getReservationById by id = " + id);
+//        return ResponseEntity.status(HttpStatus.OK)
+//                .body(reservationService.pushReservationById(id));
+//    }
 
     @PostMapping("/post")
     public ResponseEntity<Reservation> createReservation (
