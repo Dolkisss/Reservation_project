@@ -153,7 +153,7 @@ Only APPROVED reservations are considered in this check.
 
 Clone repository:
 
-git clone https://github.com/your-username/your-repository.git
+git clone https://github.com/Dolkisss/Reservation_project
 
 Build project:
 
